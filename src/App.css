@@ -1,0 +1,173 @@
+.App {
+  min-width: 1350px;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  color: #FFFFFF;
+  background: #1d1d2b;
+  align-items: center;
+  z-index:100;
+}
+
+content {
+  background: #FFFFFF;
+  align-items: center;
+}
+
+nav {
+  max-width: 1350px;
+  min-width: 1350px;
+  margin: 0px auto;
+  height: 44px;
+}
+
+#content-holder {
+  max-width: 1350px;
+  min-width: 1350px;
+  margin: 0px auto;
+}
+
+.p-rowgroup-header-name {
+  font-size: 24px;
+}
+
+.event-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.duration-from {
+  font-size: 16px;
+}
+
+.duration-to {
+  color: #cccccc;
+  font-size: 12px;
+}
+
+.month {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.month-counter {
+  color: #cccccc;
+}
+
+.title-container {
+  width: 100%;
+  padding-right: 10px;
+}
+
+.title-container > div {
+
+}
+
+.p-avatar-group .p-avatar+.p-avatar {
+  margin-left: -5px !important;
+}
+
+.p-avatar-group .p-avatar {
+  font-size: 10px;
+  height: 28px;
+  width: 28px;
+  margin: 0px;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 3px 0px !important;
+}
+
+.p-rowgroup-header {
+  font-size: 18px;
+}
+
+.p-rowgroup-header > td > span {
+  padding-bottom: 5px !important;
+  padding-top: 25px !important;
+}
+
+.event-table-list .p-chip {
+  font-size: 10px;
+  margin-bottom: 0px;
+  margin-right: 3px !important;
+  padding: 0px 5px;
+  font-weight: bold;
+}
+
+.duration-icon {
+  width: 5px;
+  margin-right: 4px;
+  color: #cccccc;
+}
+
+.festival-day {
+  color: #008013;
+}
+
+.duration-count {
+  color: #cccccc;
+  font-style: italic;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.SB span {
+  color: #07135c;
+}
+.BL span {
+  color: #5c9dd9;
+}
+.BA span {
+  color: #dfc700;
+}
+.LH span {
+  color: #cb5600;
+}
+.SJ span {
+  color: #d40000;
+}
+.SH span {
+  color: #9c00e4;
+}
+.CH span {
+  color: #9c00e4;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
