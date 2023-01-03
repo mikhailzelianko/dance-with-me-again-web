@@ -29,6 +29,10 @@ nav {
   margin: 0px auto;
 }
 
+.flag-icon {
+  margin-right: 7px;
+}
+
 .p-rowgroup-header-name {
   font-size: 24px;
 }
@@ -36,6 +40,7 @@ nav {
 .event-title {
   font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .duration-from {
@@ -66,6 +71,16 @@ nav {
 
 }
 
+.p-dialog .p-dialog-header {
+  border-top-right-radius: 5px !important;
+  border-top-left-radius: 5px !important;
+}
+
+.p-dialog .p-dialog-content:last-of-type {
+  border-bottom-right-radius: 5px !important;
+  border-bottom-left-radius: 5px !important;
+}
+
 .p-avatar-group .p-avatar+.p-avatar {
   margin-left: -5px !important;
 }
@@ -78,7 +93,8 @@ nav {
 }
 
 .p-datatable .p-datatable-tbody > tr > td {
-  padding: 3px 0px !important;
+  padding: 0px 0px !important;
+  border: none !important;
 }
 
 .p-rowgroup-header {
@@ -93,8 +109,29 @@ nav {
 .event-table-list .p-chip {
   font-size: 10px;
   margin-bottom: 0px;
+  margin-top: 3px;
   margin-right: 3px !important;
   padding: 0px 5px;
+  font-weight: bold;
+}
+
+.event-table-list .past-event,
+.event-table-list .past-event span {
+  color: #cccccc !important;
+}
+
+.p-datatable-scrollable .p-datatable-thead {
+  display: none !important;
+}
+
+.title-container .p-tag {
+  margin-left: 10px;
+  font-size: 11px;
+  height: 18px;
+}
+
+.details-dialog .p-chip {
+  font-size: 12px;
   font-weight: bold;
 }
 
@@ -113,6 +150,46 @@ nav {
   font-style: italic;
   font-size: 12px;
   margin-left: 4px;
+}
+
+.profile-card {
+  border: 1px solid #eeeeee !important;
+  border-radius: 5px !important;
+  padding: 12px;
+  font-size: 12px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  width: 120px;
+}
+
+.profile-card .profile-name {
+  padding-top: 10px;
+}
+
+.profile-card .profile-name span {
+  text-align: center;
+}
+
+.details-dialog .grid {
+  margin-bottom: 10px;
+}
+
+.details-dialog .duration-str {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.details-dialog .map {
+  margin-top: 10px;
+}
+
+.details-dialog .p-datepicker {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+
+.details-dialog .leaflet-container {
+  border-radius: 5px;
 }
 
 .SB span {
