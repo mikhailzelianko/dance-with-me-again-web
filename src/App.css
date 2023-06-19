@@ -29,12 +29,106 @@ nav {
   margin: 0px auto;
 }
 
+#filter-holder {
+  max-width: 1350px;
+  min-width: 1350px;
+  margin: 0px auto;
+  background-color: #eeeeee;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 10px 20px;
+}
+
+.filter-row {
+  margin-bottom: 10px;
+}
+
+.filter-row .arrow-icon {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.filter-row .p-inputtext {
+  height: 30px;
+  font-size: 12px;
+  padding: 2px 10px;
+  border: none;
+  width: 350px;
+}
+
+.filter-row .p-input-icon-left {
+  border: none;
+  margin-left: 30px;
+}
+
+.filter-row .p-calendar .p-inputtext {
+  height: 30px;
+  font-size: 12px;
+  padding: 2px 10px;
+  border: none;
+}
+
+.filter-row .p-calendar .p-button {
+  height: 30px;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+}
+
+.filter-row .p-multiselect {
+  margin-right: 20px;
+  height: 30px;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+}
+
+.filter-row .p-multiselect .p-multiselect-label {
+  font-size: 12px;
+  padding: 8px 10px;
+  width: 250px;
+}
+
+.filter-row .filer-icon {
+  margin-right: 5px;
+}
+
+.filter-row .filter-button {
+  height: 30px;
+  font-size: 12px;
+  margin-left: 20px;
+  width: 120px;
+}
+
+.filter-row .reset-button {
+  height: 30px;
+  font-size: 12px;
+  margin-left: 20px;
+  background: none;
+  color: #000000;
+  border: solid 1px #cccccc
+}
+
+.p-multiselect-panel .p-multiselect-header {
+  display: none;
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item {
+  font-size: 12px;
+}
+
 .flag-icon {
   margin-right: 7px;
 }
 
 .p-rowgroup-header-name {
   font-size: 24px;
+}
+
+.ongoing-label {
+  margin-right: 8px;
+  color: #008013;
+  font-size: 8px;
 }
 
 .event-title {
@@ -69,6 +163,12 @@ nav {
 
 .title-container > div {
 
+}
+
+.teachers-str {
+  color: #cccccc;
+  font-size: 10px;
+  text-align: left;
 }
 
 .p-dialog .p-dialog-header {

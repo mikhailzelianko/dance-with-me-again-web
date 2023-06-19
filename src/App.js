@@ -12,8 +12,11 @@ import {LocalDate} from "local-date";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Calendar } from 'primereact/calendar';
 import { Tag } from 'primereact/tag';
-import { Card } from 'primereact/card';
+import { InputText } from 'primereact/inputtext';
 import { faCircle } from '@fortawesome/fontawesome-free-solid';
+import { MultiSelect } from 'primereact/multiselect';
+import { Button } from 'primereact/button';
+import { Tooltip } from 'primereact/tooltip';
 
 import { MapContainer } from 'react-leaflet/MapContainer'
 import { TileLayer } from 'react-leaflet/TileLayer'
@@ -54,7 +57,20 @@ function App() {
             durationCountStr: ""
         }
     });
+    const [danceEventFilter, setDanceEventFilter] = useState({
+        genres: "",
+        locations: "",
+        types: ""
+    });
     const [displayDialog, setDisplayDialog] = useState(false);
+    const [filterName, setFilterName] = useState("");
+    const [filterStartFrom, setFilterStartFrom] = useState(new Date());
+    const [filterFinishTo, setFilterFinishTo] = useState("");
+    const [filterGenres, setFilterGenres] = useState("");
+    const [filterCountries, setFilterCountries] = useState("");
+    const [filterTypes, setFilterTypes] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [reset, setReset] = useState(false);
 
     let DefaultIcon = L.icon({
         iconUrl: icon,
@@ -66,7 +82,51 @@ function App() {
     /*https://swingwithme-7sudn4wnvq-ew.a.run.app */
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/danceEvents/all")
+        loadFilterData();
+        loadData();
+    }, []);
+
+    const loadFilterData = () => {
+        fetch(`http://localhost:8080/api/danceEvents/filter`)
+            .then(res => res.json())
+            .then(data => setDanceEventFilter(data),
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
+                }
+            ).then(data => {
+        })
+    }
+
+    const loadData = () => {
+        setLoading(true);
+        let params = {
+            "startFrom": filterStartFrom.toISOString().substring(0, 10)
+        }
+
+        if (filterName) {
+            params['title'] = filterName;
+        }
+
+        if (filterFinishTo) {
+            params['finishTo'] = filterFinishTo.toISOString().substring(0, 10);
+        }
+
+        if (typeof filterGenres !== 'undefined' && filterGenres.length > 0) {
+            params['genres'] = filterGenres.map(a => a.code);
+        }
+
+        if (typeof filterCountries !== 'undefined' && filterCountries.length > 0) {
+            params['locations'] = filterCountries.map(a => a.code);
+        }
+
+        if (typeof filterTypes !== 'undefined' && filterTypes.length > 0) {
+            params['types'] = filterTypes.map(a => a.code);
+        }
+
+        fetch(`http://localhost:8080/api/danceEvents/?` + new URLSearchParams(params))
             .then(res => res.json())
             .then(data => setDanceEvents(data),
                 // Note: it's important to handle errors here
@@ -76,9 +136,51 @@ function App() {
                     toast.current.show({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
                 }
             ).then(data => {
-                toast.current.show({ severity: 'info', summary: 'Data loaded', detail: 'loaded', life: 3000 });
+                setLoading(false);
+        })
+    }
+
+    const resetData = () => {
+        setLoading(true);
+        let currentDate = new Date();
+
+        let params = {
+            "startFrom": currentDate.toISOString().substring(0, 10)
+        }
+
+        fetch(`http://localhost:8080/api/danceEvents/?` + new URLSearchParams(params))
+            .then(res => res.json())
+            .then(data => setDanceEvents(data),
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
+                }
+            ).then(data => {
+                resetFilterData();
             })
-    }, []);
+            .then(data => {
+                setLoading(false);
+        })
+    }
+
+    const applyFilter = () => {
+        loadData();
+    }
+
+    const resetFilterData = () => {
+        setFilterStartFrom(new Date());
+        setFilterName("");
+        setFilterFinishTo("");
+        setFilterTypes("");
+        setFilterCountries("");
+        setFilterGenres("");
+    }
+
+    const resetFilter = () => {
+        resetData();
+    }
 
     const onClick = (data) => {
         setDanceEvent(data);
@@ -88,6 +190,30 @@ function App() {
     const onHide = () => {
         setDisplayDialog(false);
     }
+
+    const handleFilterNameChange = (e) => {
+        setFilterName(e.target.value);
+    };
+
+    const handleFilterStartFromChange = (e) => {
+        setFilterStartFrom(e.target.value);
+    };
+
+    const handleFilterFinishToChange = (e) => {
+        setFilterFinishTo(e.target.value);
+    };
+
+    const handleFilterGenreChange = (e) => {
+        setFilterGenres(e.target.value);
+    };
+
+    const handleFilterCountriesChange = (e) => {
+        setFilterCountries(e.target.value);
+    };
+
+    const handleFilterTypesChange = (e) => {
+        setFilterTypes(e.target.value);
+    };
 
     const headerTemplate = (data) => {
         return (
@@ -105,18 +231,43 @@ function App() {
         }
     }
 
+    const countrySelectTemplate = (option) => {
+        return (
+            <div className="flex align-items-center">
+                <img alt={option.title} src={`icons/flags/${option.code}.svg`} className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
+                <div>{option.title}</div>
+            </div>
+        );
+    };
+
+    const genreSelectTemplate = (option) => {
+        return (
+            <div className="flex align-items-center">
+                <div className={`${option.code}`}><span>{option.title}</span></div>
+            </div>
+        );
+    };
+
     const eventTitleTemplate = (data) => {
         var newLable = "";
+        var ongoingLable = "";
         if (data.newEvent) {
             newLable = (<Tag className="mr-2" severity="success" value="new"></Tag>);
+        }
+
+        if(data.ongoingEvent) {
+            ongoingLable = (<span className="ongoing-label"><i className="pi pi-circle-fill" style={{ fontSize: '8px' }}></i></span>);
         }
 
         var teachers = "";
         if (data.exchange) {
             teachers = (<Chip label="Exchange" />)
-        } else {
+        } else if (data.teachers && data.teachers.length > 0) {
             teachers = (
-                <AvatarGroup>
+                <AvatarGroup className="teachers"
+                             data-pr-tooltip={data.teachersList}
+                             data-pr-position="bottom">
+                    <Tooltip target=".teachers"/>
                     {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
                                                      title={d.displayName}
                                                      imageAlt={d.displayName}
@@ -130,6 +281,7 @@ function App() {
             <React.Fragment>
                 <div className="flex justify-content-between flex-wrap title-container">
                     <div>
+                        {ongoingLable}
                         <span className="event-title" onClick={event => onClick(data)}>{data.title}</span>
                         {newLable}
                     </div>
@@ -143,7 +295,7 @@ function App() {
         return (
             <React.Fragment>
                 <span><img alt={data.locationCountryName} src={`icons/flags/${data.locationCountry}.svg`} height={"16px"} className="flag-icon" /></span>
-                <span>{data.locationCountryName}, </span>
+                <span>{data.locationCountryName},&nbsp;</span>
                 <span>{data.locationCity}</span>
             </React.Fragment>
         );
@@ -276,6 +428,7 @@ function App() {
                   <img src="images/swm.png" className="logo" alt="Swing with me" height="44"/>
                 </nav>
             </header>
+
             <Dialog header={renderHeader()} visible={displayDialog} style={{ width: '1000px' }} onHide={() => onHide()}>
                 <div className="card-container blue-container flex align-items-start justify-content-start details-dialog">
                     <div className="flex flex-column">
@@ -365,6 +518,40 @@ function App() {
             </Dialog>
 
             <content>
+                <div id="filter-holder">
+                    <div className="filter-row">
+                        <Calendar value={filterStartFrom} onChange={handleFilterStartFromChange} showIcon readOnlyInput />
+                        <span className="arrow-icon pi pi-arrow-right"></span>
+                        <Calendar value={filterFinishTo} onChange={handleFilterFinishToChange} showIcon readOnlyInput />
+                        <span className="p-input-icon-left">
+                            <i className="pi pi-search" />
+                            <InputText value={filterName} onChange={handleFilterNameChange}
+                                       className="filter-name" placeholder="Name contain"/>
+                        </span>
+                        <Button label="Filter" icon="pi pi-check" loading={loading}
+                                onClick={applyFilter} className="filter-button"/>
+                        <Button icon="pi pi-times" loading={loading} onClick={resetFilter}
+                                aria-label="Filter" className="reset-button"/>
+                    </div>
+                    <div className="filter-row">
+                        <i className="filer-icon pi pi-building" />
+                        <MultiSelect value={filterTypes} onChange={handleFilterTypesChange} options={danceEventFilter.types}
+                                     optionLabel="title" display="chip"
+                                     placeholder="All types" maxSelectedLabels={3} />
+
+                        <i className="filer-icon pi pi-map-marker" />
+                        <MultiSelect value={filterCountries} onChange={handleFilterCountriesChange} options={danceEventFilter.locations}
+                                     optionLabel="title" display="chip"
+                                     placeholder="All countries" maxSelectedLabels={3}
+                                     itemTemplate={countrySelectTemplate}/>
+
+                        <i className="filer-icon pi pi-tags" />
+                        <MultiSelect value={filterGenres} onChange={handleFilterGenreChange} options={danceEventFilter.genres}
+                                     optionLabel="title" display="chip"
+                                     placeholder="All genres" maxSelectedLabels={3}
+                                     itemTemplate={genreSelectTemplate}/>
+                    </div>
+                </div>
                 <div id="content-holder">
                     <DataTable value={danceEvents}
                                className="event-table-list"
