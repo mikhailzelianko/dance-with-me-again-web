@@ -1,5 +1,6 @@
 .App {
   min-width: 1350px;
+  background-color: #efefef;
 }
 
 header {
@@ -12,7 +13,7 @@ header {
 }
 
 content {
-  background: #FFFFFF;
+  background: #efefef;
   align-items: center;
 }
 
@@ -33,7 +34,7 @@ nav {
   max-width: 1350px;
   min-width: 1350px;
   margin: 0px auto;
-  background-color: #eeeeee;
+  background-color: #ffffff;
   border-radius: 5px;
   margin-top: 10px;
   padding: 10px 20px;
@@ -190,6 +191,15 @@ nav {
   height: 28px;
   width: 28px;
   margin: 0px;
+}
+
+.p-inputwrapper, .p-calendar, .filter-name {
+    border: 1px solid #dddddd !important;
+    border-radius: 2px !important;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  background: none !important;
 }
 
 .p-datatable .p-datatable-tbody > tr > td {

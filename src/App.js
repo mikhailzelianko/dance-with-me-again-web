@@ -87,7 +87,7 @@ function App() {
     }, []);
 
     const loadFilterData = () => {
-        fetch(`http://localhost:8080/api/danceEvents/filter`)
+        fetch(`http://ec2-16-16-96-223.eu-north-1.compute.amazonaws.com:8080/api/danceEvents/filter`)
             .then(res => res.json())
             .then(data => setDanceEventFilter(data),
                 // Note: it's important to handle errors here
@@ -126,7 +126,7 @@ function App() {
             params['types'] = filterTypes.map(a => a.code);
         }
 
-        fetch(`http://localhost:8080/api/danceEvents/?` + new URLSearchParams(params))
+        fetch(`http://ec2-16-16-96-223.eu-north-1.compute.amazonaws.com:8080/api/danceEvents/?` + new URLSearchParams(params))
             .then(res => res.json())
             .then(data => setDanceEvents(data),
                 // Note: it's important to handle errors here
@@ -148,12 +148,9 @@ function App() {
             "startFrom": currentDate.toISOString().substring(0, 10)
         }
 
-        fetch(`http://localhost:8080/api/danceEvents/?` + new URLSearchParams(params))
+        fetch(`http://ec2-16-16-96-223.eu-north-1.compute.amazonaws.com:8080/api/danceEvents/?` + new URLSearchParams(params))
             .then(res => res.json())
             .then(data => setDanceEvents(data),
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
                 (error) => {
                     toast.current.show({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
                 }
@@ -489,6 +486,7 @@ function App() {
                                             </div>
                                         </div>
                                     ))}
+                                    <span>{danceEvent.teacherStr}</span>
                                 </div>
                             </div>
                         </div>
@@ -553,6 +551,7 @@ function App() {
                     </div>
                 </div>
                 <div id="content-holder">
+                    <div id="event-map"></div>
                     <DataTable value={danceEvents}
                                className="event-table-list"
                                sortMode="single" sortField="startFrom" sortOrder={1}
