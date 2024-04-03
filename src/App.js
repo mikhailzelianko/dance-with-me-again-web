@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {Helmet} from "react-helmet";
+import ReactGA from "react-ga4";
+
 import { Toast } from 'primereact/toast';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -7,7 +9,6 @@ import { Chip } from 'primereact/chip';
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
 import { Dialog } from 'primereact/dialog';
-import './App.css';
 import {LocalDate} from "local-date";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Calendar } from 'primereact/calendar';
@@ -18,15 +19,17 @@ import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 
-import { MapContainer } from 'react-leaflet/MapContainer'
-import { TileLayer } from 'react-leaflet/TileLayer'
-import { Marker } from 'react-leaflet/Marker'
-import { Popup } from 'react-leaflet/Popup'
+import MarkerClusterGroup from 'react-leaflet-cluster'
+import { MapContainer, Marker, Popup, TileLayer, Tooltip as LeafletTooltip} from 'react-leaflet'
 import { useMap } from 'react-leaflet/hooks'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+import './css/App.css';
+import './css/map.css';
+import './css/event-datatable.css';
 
 import { AccessAlarm, MenuBookRounded, BadgeRounded, DesktopWindowsRounded,
     StyleRounded, LocationOnRounded, CalendarMonthRounded} from '@mui/icons-material';
@@ -35,10 +38,11 @@ import 'primereact/resources/themes/fluent-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
+import 'leaflet/dist/leaflet.css';
 
 function App() {
     const toast = useRef(null);
-    const [danceEvents, setDanceEvents] = useState(null);
+    const [danceEvents, setDanceEvents] = useState([]);
     const [danceEvent, setDanceEvent] = useState({
         title: "",
         description: "",
@@ -74,12 +78,17 @@ function App() {
 
     let DefaultIcon = L.icon({
         iconUrl: icon,
-        shadowUrl: iconShadow
+        shadowUrl: iconShadow,
+        //iconSize : [13,42], // size of the icon
+        iconAnchor : [13,42], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
     L.Marker.prototype.options.icon = DefaultIcon;
 
     /*https://swingwithme-7sudn4wnvq-ew.a.run.app */
+
+    ReactGA.initialize("G-LXQVZMZGQT");
 
     useEffect(() => {
         loadFilterData();
@@ -400,6 +409,68 @@ function App() {
         );
     }
 
+    const renderEventMap = () => {
+            return (
+                <div id="map-holder">
+                    <MapContainer zoom={3} center={[50,0]}
+                            scrollWheelZoom={true} style={{width: '1350px', height: '400px'}}>
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            url = "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+                            //url = "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+                            //url = "https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png"
+                            //url = "https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png"
+                            //url = "https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
+                            //url = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+                          />
+                        <MarkerClusterGroup
+                              chunkedLoading
+                              maxClusterRadius={10}
+                              spiderfyOnMaxZoom={true}
+                            >
+                            {danceEvents.length > 0 &&
+                                     danceEvents
+                                     .filter(function(danceEvent) {
+                                          return danceEvent.locationLat != null;
+                                        }).map((danceEvent) => (
+                                        console.log(danceEvent.locationLat),
+                                       <Marker
+                                         position={[
+                                           danceEvent.locationLat,
+                                           danceEvent.locationLong
+                                         ]}
+                                         /*icon={icon}*/
+                                       >
+                                         <LeafletTooltip>
+                                            <div className="event-map-tooltip">
+                                                <div className="title">{danceEvent.title}</div>
+                                                <div className="duration">
+                                                    {danceEvent.duration.durationStr}
+                                                </div>
+                                                <div className="location">
+                                                    <span>
+                                                        <img alt={danceEvent.locationCountryName}
+                                                                src={`icons/flags/${danceEvent.locationCountry}.svg`}
+                                                                height={"12px"} className="flag-icon" />
+                                                    </span>
+
+                                                    <span>{danceEvent.locationCity}</span>
+                                                </div>
+                                                <div className="flex align-items-center flex-no-wrap genres">
+                                                    {danceEvent.genres.map(d => (<Chip label={d.title} className={`mr-2 mb-2 ${d.code}`} title={d.title} key={d.code} />))}
+                                                </div>
+                                            </div>
+                                         </LeafletTooltip>
+                                       </Marker>
+                                     ))}
+                            }
+                        </MarkerClusterGroup>
+                    </MapContainer>
+                </div>
+            );
+        }
+
     return (
         <div className="App">
             <Helmet>
@@ -500,10 +571,11 @@ function App() {
                     <div className="flex flex-column" style={{width: '300px'}}>
                         {renderCalendar()}
                         <div className="map" style={{width: '300px', height: '300px'}}>
-                            <MapContainer center={[danceEvent.locationLat, danceEvent.locationLong]} zoom={10}
+                            <MapContainer center={[danceEvent.locationLat, danceEvent.locationLong]} zoom={7}
                                           scrollWheelZoom={false} style={{width: '300px', height: '300px'}}>
                                 <TileLayer
-                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    url = "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
                                 />
                                 <Marker position={[danceEvent.locationLat, danceEvent.locationLong]}>
                                     <Popup>
@@ -551,7 +623,7 @@ function App() {
                     </div>
                 </div>
                 <div id="content-holder">
-                    <div id="event-map"></div>
+                    {renderEventMap()}
                     <DataTable value={danceEvents}
                                className="event-table-list"
                                sortMode="single" sortField="startFrom" sortOrder={1}

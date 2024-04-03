@@ -40,6 +40,13 @@ nav {
   padding: 10px 20px;
 }
 
+#map-holder {
+  max-width: 1350px;
+  min-width: 1350px;
+  height: 400px;
+  margin: 0px auto;
+}
+
 .filter-row {
   margin-bottom: 10px;
 }
