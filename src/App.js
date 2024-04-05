@@ -24,7 +24,9 @@ import { MapContainer, Marker, Popup, TileLayer, Tooltip as LeafletTooltip} from
 import { useMap } from 'react-leaflet/hooks'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import icon from 'leaflet/dist/images/marker-icon.png';
+//import icon from 'leaflet/dist/images/marker-icon.png';
+import icon from './image/map/marker-icon.png';
+import exchangeMapIcon from './image/map/exchange-marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 import './css/App.css';
@@ -76,15 +78,23 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [reset, setReset] = useState(false);
 
-    let DefaultIcon = L.icon({
+    let defaultIcon = L.icon({
         iconUrl: icon,
-        shadowUrl: iconShadow,
-        //iconSize : [13,42], // size of the icon
-        iconAnchor : [13,42], // point of the icon which will correspond to marker's location
+        //shadowUrl: iconShadow,
+        iconSize : [28,42], // size of the icon
+        iconAnchor : [14,42], // point of the icon which will correspond to marker's location
         popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
-    L.Marker.prototype.options.icon = DefaultIcon;
+    let exchangeIcon = L.icon({
+        iconUrl: exchangeMapIcon,
+        //shadowUrl: iconShadow,
+        iconSize : [28,42], // size of the icon
+        iconAnchor : [14,42], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    L.Marker.prototype.options.icon = defaultIcon;
 
     /*https://swingwithme-7sudn4wnvq-ew.a.run.app */
 
@@ -417,12 +427,12 @@ function App() {
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            url = "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+                            //url = "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
                             //url = "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
                             //url = "https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png"
                             //url = "https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png"
                             //url = "https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
-                            //url = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+                            url = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
                           />
                         <MarkerClusterGroup
                               chunkedLoading
@@ -440,6 +450,11 @@ function App() {
                                            danceEvent.locationLat,
                                            danceEvent.locationLong
                                          ]}
+                                         eventHandlers={{
+                                            click: () => {
+                                                onClick(danceEvent);
+                                            }
+                                         }}
                                          /*icon={icon}*/
                                        >
                                          <LeafletTooltip>
@@ -575,7 +590,7 @@ function App() {
                                           scrollWheelZoom={false} style={{width: '300px', height: '300px'}}>
                                 <TileLayer
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                    url = "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+                                    url = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
                                 />
                                 <Marker position={[danceEvent.locationLat, danceEvent.locationLong]}>
                                     <Popup>
