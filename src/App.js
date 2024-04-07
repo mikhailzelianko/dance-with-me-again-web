@@ -100,8 +100,6 @@ function App() {
 
     ReactGA.initialize("G-LXQVZMZGQT");
 
-    ReactGA.send({ hitType: "pageview", page: "/index.html", title: "Main view" });
-
     useEffect(() => {
         loadFilterData();
         loadData();
