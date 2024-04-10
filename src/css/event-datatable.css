@@ -1,0 +1,32 @@
+#dance-event-list {
+    width: 700px;
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.event-list-row td {
+    background: #efefef;
+}
+
+.event-table-list {
+
+}
+
+#dance-event-list .p-datatable-scrollable .p-datatable-tbody>tr>td {
+    display: block;
+    padding-top: 5px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px dashed #cccccc !important;
+}
+
+#dance-event-list .duration {
+    margin-left: 15px;
+}
+
+#dance-event-list .mb-2 {
+    margin-bottom: 2px !important;
+}
+
+#dance-event-list .p-rowgroup-header-name span {
+    display: inline-block;
+}

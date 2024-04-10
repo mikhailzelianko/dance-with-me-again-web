@@ -307,6 +307,64 @@ function App() {
         );
     }
 
+    const eventShortTitleTemplate = (data) => {
+            var newLable = "";
+            var ongoingLable = "";
+            if (data.newEvent) {
+                newLable = (<Tag className="mr-2" severity="success" value="new"></Tag>);
+            }
+
+            if(data.ongoingEvent) {
+                ongoingLable = (<span className="ongoing-label"><i className="pi pi-circle-fill" style={{ fontSize: '8px' }}></i></span>);
+            }
+
+            var teachers = "";
+            if (data.exchange) {
+                teachers = (<Chip label="Exchange" />)
+            } else if (data.teachers && data.teachers.length > 0) {
+                teachers = (
+                    <AvatarGroup className="teachers"
+                                 data-pr-tooltip={data.teachersList}
+                                 data-pr-position="bottom">
+                        <Tooltip target=".teachers"/>
+                        {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
+                                                         title={d.displayName}
+                                                         imageAlt={d.displayName}
+                                                         label={d.displayName.match(/\b(\w)/g).join('')}
+                                                         shape="circle"/>))}
+                    </AvatarGroup>
+                )
+            }
+
+            return (
+                <React.Fragment>
+                    <div className="flex justify-content-between flex-wrap title-container">
+                        <div>
+                            {ongoingLable}
+                            <span className="event-title" onClick={event => onClick(data)}>{data.title}</span>
+                            {newLable}
+                        </div>
+                        <div>
+                            {data.genres.map(d => (<Chip label={d.code} className={`mr-2 mb-2 ${d.code}`} title={d.title} key={d.code} />))}
+                        </div>
+                    </div>
+                    <div className="flex justify-content-between flex-wrap title-container">
+                        <div>
+                            {teachers}
+                        </div>
+                        <div>
+                            <span>{data.locationCity}&nbsp;</span>
+                            <span><img alt={data.locationCountryName}
+                                    src={`icons/flags/${data.locationCountry}.svg`}
+                                    height={"16px"} className="flag-icon" />
+                            </span>
+                        </div>
+
+                    </div>
+                </React.Fragment>
+            );
+        }
+
     const eventLocationTemplate = (data) => {
         return (
             <React.Fragment>
@@ -387,6 +445,36 @@ function App() {
         );
     }
 
+    const eventShortDurationWeekTemplate = (data) => {
+
+           var weeks = data.duration.weeks;
+           var daysBetween = data.duration.durationCount;
+           var daysBetweenStr = daysBetween + " " + (daysBetween > 1 ? "days" : "day");
+
+           var durationWeeks = weeks.map((week) =>
+                <div className="week">
+                    {week.map((day) => {
+                            let icon;
+                            if (day) {
+                                icon = <FontAwesomeIcon icon="fa-circle" className="duration-icon festival-day" />
+                            } else {
+                                icon = <FontAwesomeIcon icon="fa-circle" className="duration-icon" />
+                            }
+                            return icon;
+                        }
+                    )}
+                </div>
+            );
+
+            return (
+                <React.Fragment>
+                    <div className="duration">
+                        {durationWeeks}
+                    </div>
+                </React.Fragment>
+            );
+        }
+
     const calculateEventTotal = (eventListGroping) => {
         let total = 0;
 
@@ -419,11 +507,107 @@ function App() {
         );
     }
 
+    const renderFilter = () => {
+        return ( null
+            /*<div id="filter-holder">
+                <div className="filter-row">
+                    <Calendar value={filterStartFrom} onChange={handleFilterStartFromChange} showIcon readOnlyInput />
+                    <span className="arrow-icon pi pi-arrow-right"></span>
+                    <Calendar value={filterFinishTo} onChange={handleFilterFinishToChange} showIcon readOnlyInput />
+                    <span className="p-input-icon-left">
+                        <i className="pi pi-search" />
+                        <InputText value={filterName} onChange={handleFilterNameChange}
+                                   className="filter-name" placeholder="Name contain"/>
+                    </span>
+                    <Button label="Filter" icon="pi pi-check" loading={loading}
+                            onClick={applyFilter} className="filter-button"/>
+                    <Button icon="pi pi-times" loading={loading} onClick={resetFilter}
+                            aria-label="Filter" className="reset-button"/>
+                </div>
+                <div className="filter-row">
+                    <i className="filer-icon pi pi-building" />
+                    <MultiSelect value={filterTypes} onChange={handleFilterTypesChange} options={danceEventFilter.types}
+                                 optionLabel="title" display="chip"
+                                 placeholder="All types" maxSelectedLabels={3} />
+
+                    <i className="filer-icon pi pi-map-marker" />
+                    <MultiSelect value={filterCountries} onChange={handleFilterCountriesChange} options={danceEventFilter.locations}
+                                 optionLabel="title" display="chip"
+                                 placeholder="All countries" maxSelectedLabels={3}
+                                 itemTemplate={countrySelectTemplate}/>
+
+                    <i className="filer-icon pi pi-tags" />
+                    <MultiSelect value={filterGenres} onChange={handleFilterGenreChange} options={danceEventFilter.genres}
+                                 optionLabel="title" display="chip"
+                                 placeholder="All genres" maxSelectedLabels={3}
+                                 itemTemplate={genreSelectTemplate}/>
+                </div>
+            </div>*/
+        )
+    }
+
+    const renderEventList = () => {
+        return (
+            <DataTable value={danceEvents}
+                       className="event-table-list"
+                       sortMode="single" sortField="startFrom" sortOrder={1}
+                       rowGroupMode="subheader" groupRowsBy="eventListGroping"
+                       rowGroupHeaderTemplate={headerTemplate}
+                       scrollable
+                       responsiveLayout="scroll"
+                       rowClassName={rowClass}>
+
+                <Column body={eventDurationTemplate} style={{ maxWidth: '60px' }}></Column>
+                <Column body={eventDurationWeekTemplate} style={{ maxWidth: '130px' }}></Column>
+                <Column body={eventTitleTemplate}></Column>
+                <Column body={eventGenresTemplate} style={{ maxWidth: '200px' }}></Column>
+                <Column body={eventLocationTemplate} style={{ maxWidth: '280px' }}></Column>
+            </DataTable>
+        )
+    }
+
+    const renderEventShortList = () => {
+            return (
+                <DataTable value={danceEvents}
+                           className="event-table-list"
+                           sortMode="single" sortField="startFrom" sortOrder={1}
+                           rowGroupMode="subheader" groupRowsBy="eventListGroping"
+                           rowGroupHeaderTemplate={headerTemplate}
+                           scrollable
+                           responsiveLayout="scroll"
+                           rowClassName="event-list-row">
+
+                    <Column body={eventShortDurationTemplate} style={{ maxWidth: '150px' }}></Column>
+                    <Column body={eventShortTitleTemplate}></Column>
+                </DataTable>
+            )
+        }
+
+    const eventShortDurationTemplate = (data) => {
+           const startFrom = new LocalDate(data.startFrom);
+           var finishTo = new LocalDate(data.finishTo);
+
+           return (
+               <React.Fragment>
+               <div className="flex align-items-center flex-no-wrap">
+                   <div className="duration">
+                       <span className="duration-from">{startFrom.getDate()}</span>
+                       <span> - </span>
+                       <span className="duration-to">{finishTo.getDate()}</span>
+                   </div>
+                   <div>
+                        {eventShortDurationWeekTemplate(data)}
+                   </div>
+               </div>
+               </React.Fragment>
+           );
+       }
+
     const renderEventMap = () => {
             return (
                 <div id="map-holder">
-                    <MapContainer zoom={3} center={[50,0]}
-                            scrollWheelZoom={true} style={{width: '1350px', height: '400px'}}>
+                    <MapContainer zoom={4} center={[50,20]}
+                            scrollWheelZoom={true} style={{width: '100%', height: '100vh', position: 'fixed'}}>
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -603,57 +787,13 @@ function App() {
             </Dialog>
 
             <content>
-                <div id="filter-holder">
-                    <div className="filter-row">
-                        <Calendar value={filterStartFrom} onChange={handleFilterStartFromChange} showIcon readOnlyInput />
-                        <span className="arrow-icon pi pi-arrow-right"></span>
-                        <Calendar value={filterFinishTo} onChange={handleFilterFinishToChange} showIcon readOnlyInput />
-                        <span className="p-input-icon-left">
-                            <i className="pi pi-search" />
-                            <InputText value={filterName} onChange={handleFilterNameChange}
-                                       className="filter-name" placeholder="Name contain"/>
-                        </span>
-                        <Button label="Filter" icon="pi pi-check" loading={loading}
-                                onClick={applyFilter} className="filter-button"/>
-                        <Button icon="pi pi-times" loading={loading} onClick={resetFilter}
-                                aria-label="Filter" className="reset-button"/>
-                    </div>
-                    <div className="filter-row">
-                        <i className="filer-icon pi pi-building" />
-                        <MultiSelect value={filterTypes} onChange={handleFilterTypesChange} options={danceEventFilter.types}
-                                     optionLabel="title" display="chip"
-                                     placeholder="All types" maxSelectedLabels={3} />
+                {renderEventMap()}
 
-                        <i className="filer-icon pi pi-map-marker" />
-                        <MultiSelect value={filterCountries} onChange={handleFilterCountriesChange} options={danceEventFilter.locations}
-                                     optionLabel="title" display="chip"
-                                     placeholder="All countries" maxSelectedLabels={3}
-                                     itemTemplate={countrySelectTemplate}/>
-
-                        <i className="filer-icon pi pi-tags" />
-                        <MultiSelect value={filterGenres} onChange={handleFilterGenreChange} options={danceEventFilter.genres}
-                                     optionLabel="title" display="chip"
-                                     placeholder="All genres" maxSelectedLabels={3}
-                                     itemTemplate={genreSelectTemplate}/>
-                    </div>
-                </div>
                 <div id="content-holder">
-                    {renderEventMap()}
-                    <DataTable value={danceEvents}
-                               className="event-table-list"
-                               sortMode="single" sortField="startFrom" sortOrder={1}
-                               rowGroupMode="subheader" groupRowsBy="eventListGroping"
-                               rowGroupHeaderTemplate={headerTemplate}
-                               scrollable
-                               responsiveLayout="scroll"
-                               rowClassName={rowClass}>
-
-                        <Column body={eventDurationTemplate} style={{ maxWidth: '60px' }}></Column>
-                        <Column body={eventDurationWeekTemplate} style={{ maxWidth: '130px' }}></Column>
-                        <Column body={eventTitleTemplate}></Column>
-                        <Column body={eventGenresTemplate} style={{ maxWidth: '200px' }}></Column>
-                        <Column body={eventLocationTemplate} style={{ maxWidth: '280px' }}></Column>
-                    </DataTable>
+                    <div id="dance-event-list">
+                        {renderFilter()}
+                        {renderEventShortList()}
+                    </div>
                 </div>
             </content>
 
