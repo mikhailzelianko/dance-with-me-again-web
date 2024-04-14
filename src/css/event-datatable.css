@@ -27,6 +27,31 @@
     margin-bottom: 2px !important;
 }
 
-#dance-event-list .p-rowgroup-header-name span {
+#dance-event-list span.p-rowgroup-header-name {
     display: inline-block;
+}
+
+#dance-event-list .title-container {
+    padding-right: 0px;
+}
+
+#dance-event-list .p-rowgroup-header > td > span {
+    padding-bottom: 5px !important;
+    padding-top: 30px !important;
+    padding-left: 15px;
+}
+
+#dance-event-list .teachers-container .p-chip {
+    color: #ffffff;
+    background: #777777;
+}
+
+#dance-event-list .camp-icon {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+#dance-event-list .camp-icon .MuiSvgIcon-root {
+    height: 18px;
+    width: 18px;
 }

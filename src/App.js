@@ -34,7 +34,8 @@ import './css/map.css';
 import './css/event-datatable.css';
 
 import { AccessAlarm, MenuBookRounded, BadgeRounded, DesktopWindowsRounded,
-    StyleRounded, LocationOnRounded, CalendarMonthRounded} from '@mui/icons-material';
+    StyleRounded, LocationOnRounded, CalendarMonthRounded,
+    MicNoneRoundedIcon, Apartment} from '@mui/icons-material';
 
 import 'primereact/resources/themes/fluent-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -72,7 +73,7 @@ function App() {
     const [filterName, setFilterName] = useState("");
     const [filterStartFrom, setFilterStartFrom] = useState(new Date());
     const [filterFinishTo, setFilterFinishTo] = useState("");
-    const [filterGenres, setFilterGenres] = useState("");
+    const [filterGenres, setFilterGenres] = useState([{code: "BL"}]);
     const [filterCountries, setFilterCountries] = useState("");
     const [filterTypes, setFilterTypes] = useState("");
     const [loading, setLoading] = useState(false);
@@ -318,6 +319,12 @@ function App() {
                 ongoingLable = (<span className="ongoing-label"><i className="pi pi-circle-fill" style={{ fontSize: '8px' }}></i></span>);
             }
 
+            var campIcon = "";
+            if (data.camp) {
+                /*campIcon = (<Chip icon="pi pi-home" className="camp-icon" />)*/
+                campIcon = (<span className="camp-icon" title="camp" ><Apartment /></span>)
+            }
+
             var teachers = "";
             if (data.exchange) {
                 teachers = (<Chip label="Exchange" />)
@@ -336,10 +343,16 @@ function App() {
                 )
             }
 
+            var liveMusic = "";
+            if (data.bands && data.bands.length > 0) {
+                liveMusic = (<Chip label="Live music" icon="pi pi-microphone" />)
+            }
+
             return (
                 <React.Fragment>
                     <div className="flex justify-content-between flex-wrap title-container">
                         <div>
+                            {campIcon}
                             {ongoingLable}
                             <span className="event-title" onClick={event => onClick(data)}>{data.title}</span>
                             {newLable}
@@ -348,9 +361,10 @@ function App() {
                             {data.genres.map(d => (<Chip label={d.code} className={`mr-2 mb-2 ${d.code}`} title={d.title} key={d.code} />))}
                         </div>
                     </div>
-                    <div className="flex justify-content-between flex-wrap title-container">
-                        <div>
+                    <div className="flex justify-content-between flex-wrap teachers-container">
+                        <div className="flex">
                             {teachers}
+                            {liveMusic}
                         </div>
                         <div>
                             <span>{data.locationCity}&nbsp;</span>
@@ -606,7 +620,7 @@ function App() {
     const renderEventMap = () => {
             return (
                 <div id="map-holder">
-                    <MapContainer zoom={4} center={[50,20]}
+                    <MapContainer zoom={4} center={[55,40]}
                             scrollWheelZoom={true} style={{width: '100%', height: '100vh', position: 'fixed'}}>
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
