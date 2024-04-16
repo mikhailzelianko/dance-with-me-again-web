@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {Helmet} from "react-helmet";
 import ReactGA from "react-ga4";
+import CookieConsent from "react-cookie-consent";
 
 import { Toast } from 'primereact/toast';
 import { DataTable } from 'primereact/datatable';
@@ -25,17 +26,20 @@ import { useMap } from 'react-leaflet/hooks'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 //import icon from 'leaflet/dist/images/marker-icon.png';
-import icon from './image/map/marker-icon.png';
+import icon from './image/map/marker-icon-clear.png';
+import iconCamp from './image/map/marker-icon-camp.png';
+import iconParty from './image/map/marker-icon-party.png';
 import exchangeMapIcon from './image/map/exchange-marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 import './css/App.css';
 import './css/map.css';
 import './css/event-datatable.css';
+import './css/event-filter.css';
 
 import { AccessAlarm, MenuBookRounded, BadgeRounded, DesktopWindowsRounded,
     StyleRounded, LocationOnRounded, CalendarMonthRounded,
-    MicNoneRoundedIcon, Apartment} from '@mui/icons-material';
+    MicNoneRoundedIcon, Apartment, Bungalow, WorkspacePremium} from '@mui/icons-material';
 
 import 'primereact/resources/themes/fluent-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -88,16 +92,23 @@ function App() {
     });
 
     let exchangeIcon = L.icon({
-        iconUrl: exchangeMapIcon,
+        iconUrl: iconParty,
         //shadowUrl: iconShadow,
         iconSize : [28,42], // size of the icon
         iconAnchor : [14,42], // point of the icon which will correspond to marker's location
         popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
-    L.Marker.prototype.options.icon = defaultIcon;
+    let campIcon = L.icon({
+        iconUrl: iconCamp,
+        //shadowUrl: iconShadow,
+        iconSize : [28,42], // size of the icon
+        iconAnchor : [14,42], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
 
-    /*https://swingwithme-7sudn4wnvq-ew.a.run.app */
+
+    L.Marker.prototype.options.icon = defaultIcon;
 
     ReactGA.initialize("G-LXQVZMZGQT");
 
@@ -200,6 +211,12 @@ function App() {
     }
 
     const onClick = (data) => {
+        ReactGA.event({
+          category: "festivals",
+          action: "open festival",
+          label: data.title, // optional
+        });
+
         setDanceEvent(data);
         setDisplayDialog(true);
     }
@@ -282,7 +299,6 @@ function App() {
         } else if (data.teachers && data.teachers.length > 0) {
             teachers = (
                 <AvatarGroup className="teachers"
-                             data-pr-tooltip={data.teachersList}
                              data-pr-position="bottom">
                     <Tooltip target=".teachers"/>
                     {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
@@ -322,30 +338,57 @@ function App() {
             var campIcon = "";
             if (data.camp) {
                 /*campIcon = (<Chip icon="pi pi-home" className="camp-icon" />)*/
-                campIcon = (<span className="camp-icon" title="camp" ><Apartment /></span>)
+                campIcon = (<span className="camp-icon" title="Camp" ><Apartment /></span>)
             }
 
+            let rand = Math.floor(Math.random() * 10000) + 1;
+
+            let tchClassName = "teachers " + "tch-" + rand;
+            let tchSelector = ".tch-" + rand;
             var teachers = "";
             if (data.exchange) {
                 teachers = (<Chip label="Exchange" />)
             } else if (data.teachers && data.teachers.length > 0) {
                 teachers = (
-                    <AvatarGroup className="teachers"
-                                 data-pr-tooltip={data.teachersList}
-                                 data-pr-position="bottom">
-                        <Tooltip target=".teachers"/>
-                        {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
-                                                         title={d.displayName}
-                                                         imageAlt={d.displayName}
-                                                         label={d.displayName.match(/\b(\w)/g).join('')}
-                                                         shape="circle"/>))}
-                    </AvatarGroup>
+                    <React.Fragment>
+                        <AvatarGroup className={tchClassName} data-pr-position="bottom">
+                            {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
+                                                             title={d.displayName}
+                                                             imageAlt={d.displayName}
+                                                             label={d.displayName.match(/\b(\w)/g).join('')}
+                                                             shape="circle"/>))}
+                        </AvatarGroup>
+                        <Tooltip target={tchSelector}>
+                            <span>
+                            {data.teachers.map(d => (<span>{d.displayName}<br/></span>
+                                ))}
+                            </span>
+                        </Tooltip>
+                    </React.Fragment>
                 )
             }
 
             var liveMusic = "";
+            let lmClassName = "live-music " + "lm-" + rand;
+            let lmSelector = ".lm-" + rand;
             if (data.bands && data.bands.length > 0) {
-                liveMusic = (<Chip label="Live music" icon="pi pi-microphone" />)
+                liveMusic = (
+                    <span className={lmClassName} data-pr-position="bottom">
+                        <Chip label="Live music" icon="pi pi-microphone" />
+                        <Tooltip target={lmSelector}>
+                            <span>
+                            {data.bands.map(d => (<span>{d.title}<br/></span>
+                                ))}
+                            </span>
+                        </Tooltip>
+                    </span>
+                )
+            }
+
+            var competitions = "";
+            if (data.competition) {
+                /*campIcon = (<Chip icon="pi pi-home" className="camp-icon" />)*/
+                competitions = (<span className="comp-icon" title="Competitions" ><WorkspacePremium /></span>)
             }
 
             return (
@@ -365,6 +408,7 @@ function App() {
                         <div className="flex">
                             {teachers}
                             {liveMusic}
+                            {competitions}
                         </div>
                         <div>
                             <span>{data.locationCity}&nbsp;</span>
@@ -522,8 +566,8 @@ function App() {
     }
 
     const renderFilter = () => {
-        return ( null
-            /*<div id="filter-holder">
+        return (
+            <div id="filter-holder">
                 <div className="filter-row">
                     <Calendar value={filterStartFrom} onChange={handleFilterStartFromChange} showIcon readOnlyInput />
                     <span className="arrow-icon pi pi-arrow-right"></span>
@@ -556,9 +600,19 @@ function App() {
                                  placeholder="All genres" maxSelectedLabels={3}
                                  itemTemplate={genreSelectTemplate}/>
                 </div>
-            </div>*/
+            </div>
         )
     }
+
+    const renderShortFilter = () => {
+            return (
+            <React.Fragment>
+                <div className="filter-short-holder">
+                    <span>qwertyuil</span>
+                </div>
+            </React.Fragment>
+            )
+        }
 
     const renderEventList = () => {
         return (
@@ -642,7 +696,7 @@ function App() {
                                      .filter(function(danceEvent) {
                                           return danceEvent.locationLat != null;
                                         }).map((danceEvent) => (
-                                        console.log(danceEvent.locationLat),
+
                                        <Marker
                                          position={[
                                            danceEvent.locationLat,
@@ -653,7 +707,7 @@ function App() {
                                                 onClick(danceEvent);
                                             }
                                          }}
-                                         /*icon={icon}*/
+                                         icon={getMapIcon(danceEvent)}
                                        >
                                          <LeafletTooltip>
                                             <div className="event-map-tooltip">
@@ -684,6 +738,18 @@ function App() {
             );
         }
 
+    const getMapIcon = (data) => {
+        if (data.camp) {
+            return campIcon;
+        }
+
+        if (data.exchange) {
+            return exchangeIcon;
+        }
+
+        return defaultIcon;
+    }
+
     return (
         <div className="App">
             <Helmet>
@@ -703,6 +769,7 @@ function App() {
                 <meta name="twitter:description" content='Swing with me - calendar for Lindy hop, Balboa, Blues, Shag, Charlston festivals' />
                 { /* End Twitter tags */ }
             </Helmet>
+            <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
             <Toast ref={toast} />
             <header>
                 <nav>
@@ -805,7 +872,6 @@ function App() {
 
                 <div id="content-holder">
                     <div id="dance-event-list">
-                        {renderFilter()}
                         {renderEventShortList()}
                     </div>
                 </div>

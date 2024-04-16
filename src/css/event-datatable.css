@@ -13,7 +13,6 @@
 }
 
 #dance-event-list .p-datatable-scrollable .p-datatable-tbody>tr>td {
-    display: block;
     padding-top: 5px !important;
     padding-bottom: 10px !important;
     border-bottom: 1px dashed #cccccc !important;
@@ -54,4 +53,12 @@
 #dance-event-list .camp-icon .MuiSvgIcon-root {
     height: 18px;
     width: 18px;
+}
+
+#dance-event-list .live-music {
+    margin-left: 15px;
+}
+
+#dance-event-list .live-music .p-chip {
+    background-color: #5c9dd9;
 }
