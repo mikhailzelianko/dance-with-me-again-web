@@ -28,6 +28,7 @@ import 'leaflet/dist/leaflet.css';
 //import icon from 'leaflet/dist/images/marker-icon.png';
 import icon from './image/map/marker-icon-clear.png';
 import iconCamp from './image/map/marker-icon-camp.png';
+import iconCruise from './image/map/marker-icon-cruise.png';
 import iconParty from './image/map/marker-icon-party.png';
 import exchangeMapIcon from './image/map/exchange-marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -39,7 +40,8 @@ import './css/event-filter.css';
 
 import { AccessAlarm, MenuBookRounded, BadgeRounded, DesktopWindowsRounded,
     StyleRounded, LocationOnRounded, CalendarMonthRounded,
-    MicNoneRoundedIcon, Apartment, Bungalow, WorkspacePremium} from '@mui/icons-material';
+    MicNoneRoundedIcon, Apartment, Bungalow,
+    WorkspacePremium, EmojiEvents, Sailing} from '@mui/icons-material';
 
 import 'primereact/resources/themes/fluent-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -106,6 +108,14 @@ function App() {
         iconAnchor : [14,42], // point of the icon which will correspond to marker's location
         popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
     });
+
+    let cruiseIcon = L.icon({
+            iconUrl: iconCruise,
+            //shadowUrl: iconShadow,
+            iconSize : [28,42], // size of the icon
+            iconAnchor : [14,42], // point of the icon which will correspond to marker's location
+            popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
 
 
     L.Marker.prototype.options.icon = defaultIcon;
@@ -299,7 +309,7 @@ function App() {
         } else if (data.teachers && data.teachers.length > 0) {
             teachers = (
                 <AvatarGroup className="teachers"
-                             data-pr-position="bottom">
+                             data-pr-position="right">
                     <Tooltip target=".teachers"/>
                     {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
                                                      title={d.displayName}
@@ -339,7 +349,11 @@ function App() {
             if (data.camp) {
                 /*campIcon = (<Chip icon="pi pi-home" className="camp-icon" />)*/
                 campIcon = (<span className="camp-icon" title="Camp" ><Apartment /></span>)
-            }
+            } else
+            if (data.cruise) {
+               /*campIcon = (<Chip icon="pi pi-home" className="camp-icon" />)*/
+               campIcon = (<span className="camp-icon" title="Cruise" ><Sailing /></span>)
+           }
 
             let rand = Math.floor(Math.random() * 10000) + 1;
 
@@ -351,7 +365,7 @@ function App() {
             } else if (data.teachers && data.teachers.length > 0) {
                 teachers = (
                     <React.Fragment>
-                        <AvatarGroup className={tchClassName} data-pr-position="bottom">
+                        <AvatarGroup className={tchClassName} data-pr-position="right">
                             {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
                                                              title={d.displayName}
                                                              imageAlt={d.displayName}
@@ -373,7 +387,7 @@ function App() {
             let lmSelector = ".lm-" + rand;
             if (data.bands && data.bands.length > 0) {
                 liveMusic = (
-                    <span className={lmClassName} data-pr-position="bottom">
+                    <span className={lmClassName} data-pr-position="right">
                         <Chip label="Live music" icon="pi pi-microphone" />
                         <Tooltip target={lmSelector}>
                             <span>
@@ -386,9 +400,9 @@ function App() {
             }
 
             var competitions = "";
-            if (data.competition) {
+            if (data.competitions) {
                 /*campIcon = (<Chip icon="pi pi-home" className="camp-icon" />)*/
-                competitions = (<span className="comp-icon" title="Competitions" ><WorkspacePremium /></span>)
+                competitions = (<span className="comp-icon" title="Competitions" ><EmojiEvents /></span>)
             }
 
             return (
@@ -743,10 +757,13 @@ function App() {
             return campIcon;
         }
 
+        if (data.cruise) {
+            return cruiseIcon;
+        }
+
         if (data.exchange) {
             return exchangeIcon;
         }
-
         return defaultIcon;
     }
 
