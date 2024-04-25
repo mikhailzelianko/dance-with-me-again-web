@@ -19,6 +19,7 @@ import { faCircle } from '@fortawesome/fontawesome-free-solid';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
+import { locale, addLocale, updateLocaleOption, updateLocaleOptions, localeOption, localeOptions } from 'primereact/api';
 
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, Marker, Popup, TileLayer, Tooltip as LeafletTooltip} from 'react-leaflet'
@@ -37,6 +38,7 @@ import './css/App.css';
 import './css/map.css';
 import './css/event-datatable.css';
 import './css/event-filter.css';
+import './css/event-details.css';
 
 import { AccessAlarm, MenuBookRounded, BadgeRounded, DesktopWindowsRounded,
     StyleRounded, LocationOnRounded, CalendarMonthRounded,
@@ -48,6 +50,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'leaflet/dist/leaflet.css';
+
 
 function App() {
     const toast = useRef(null);
@@ -121,6 +124,14 @@ function App() {
     L.Marker.prototype.options.icon = defaultIcon;
 
     ReactGA.initialize("G-LXQVZMZGQT");
+
+    addLocale('en-sw', {
+        firstDayOfWeek: 1,
+
+    });
+    /*PrimeFaces.locales['en_GB'] = {
+        firstDay : 1
+    };*/
 
     useEffect(() => {
         loadFilterData();
@@ -293,6 +304,7 @@ function App() {
     };
 
     const eventTitleTemplate = (data) => {
+
         var newLable = "";
         var ongoingLable = "";
         if (data.newEvent) {
@@ -334,6 +346,72 @@ function App() {
         );
     }
 
+    const eventTeachersList = (data) => {
+
+        let maxIcons = 12;
+
+        let rand = Math.floor(Math.random() * 10000) + 1;
+
+        let tchClassName = "teachers " + "tch-" + rand;
+        let tchSelector = ".tch-" + rand;
+        var teachers = "";
+        if (data.exchange) {
+            teachers = (<Chip label="Exchange" />)
+        } else if (data.teachers && data.teachers.length > 0) {
+            if (data.teachers.length < maxIcons) {
+                teachers = (
+                    <React.Fragment>
+                        <AvatarGroup className={tchClassName} data-pr-position="right">
+                            {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
+                                                             title={d.displayName}
+                                                             imageAlt={d.displayName}
+                                                             label={d.displayName.match(/\b(\w)/g).join('')}
+                                                             shape="circle"/>))}
+                        </AvatarGroup>
+                        <Tooltip target={tchSelector}>
+                            <span>
+                                {data.teachers
+                                    .sort(function(a,b){return (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0);})
+                                    .map(d => (<span>{d.displayName}<br/></span>
+                                    ))}
+                            </span>
+                        </Tooltip>
+                    </React.Fragment>
+                )
+            } else {
+                let otherCountInt = data.teachers.length - maxIcons + 2;
+                let otherCount = "+" + otherCountInt;
+                teachers = (
+
+                    <React.Fragment>
+                        <AvatarGroup className={tchClassName} data-pr-position="right">
+                            {data.teachers.slice(0, maxIcons - 2).map(d => (<Avatar image={d.profilePictureSrc}
+                                                             title={d.displayName}
+                                                             imageAlt={d.displayName}
+                                                             label={d.displayName.match(/\b(\w)/g).join('')}
+                                                             shape="circle"/>))}
+                            {(<Avatar
+                                  title={otherCount}
+                                  imageAlt={otherCount}
+                                  label={otherCount}
+                                  shape="circle"/>)}
+                        </AvatarGroup>
+                        <Tooltip target={tchSelector}>
+                            <span>
+                                {data.teachers
+                                    .sort(function(a,b){return (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0);})
+                                    .map(d => (<span>{d.displayName}<br/></span>
+                                    ))}
+                            </span>
+                        </Tooltip>
+                    </React.Fragment>
+                )
+            }
+        }
+
+        return teachers;
+    }
+
     const eventShortTitleTemplate = (data) => {
             var newLable = "";
             var ongoingLable = "";
@@ -355,32 +433,8 @@ function App() {
                campIcon = (<span className="camp-icon" title="Cruise" ><Sailing /></span>)
            }
 
-            let rand = Math.floor(Math.random() * 10000) + 1;
 
-            let tchClassName = "teachers " + "tch-" + rand;
-            let tchSelector = ".tch-" + rand;
-            var teachers = "";
-            if (data.exchange) {
-                teachers = (<Chip label="Exchange" />)
-            } else if (data.teachers && data.teachers.length > 0) {
-                teachers = (
-                    <React.Fragment>
-                        <AvatarGroup className={tchClassName} data-pr-position="right">
-                            {data.teachers.map(d => (<Avatar image={d.profilePictureSrc}
-                                                             title={d.displayName}
-                                                             imageAlt={d.displayName}
-                                                             label={d.displayName.match(/\b(\w)/g).join('')}
-                                                             shape="circle"/>))}
-                        </AvatarGroup>
-                        <Tooltip target={tchSelector}>
-                            <span>
-                            {data.teachers.map(d => (<span>{d.displayName}<br/></span>
-                                ))}
-                            </span>
-                        </Tooltip>
-                    </React.Fragment>
-                )
-            }
+            let rand = Math.floor(Math.random() * 10000) + 1;
 
             var liveMusic = "";
             let lmClassName = "live-music " + "lm-" + rand;
@@ -401,8 +455,7 @@ function App() {
 
             var competitions = "";
             if (data.competitions) {
-                /*campIcon = (<Chip icon="pi pi-home" className="camp-icon" />)*/
-                competitions = (<span className="comp-icon" title="Competitions" ><EmojiEvents /></span>)
+                //competitions = (<span className="comp-icon" title="Competitions" ><EmojiEvents /></span>)
             }
 
             return (
@@ -420,7 +473,7 @@ function App() {
                     </div>
                     <div className="flex justify-content-between flex-wrap teachers-container">
                         <div className="flex">
-                            {teachers}
+                            {eventTeachersList(data)}
                             {liveMusic}
                             {competitions}
                         </div>
@@ -575,7 +628,7 @@ function App() {
         return (
             <Calendar value={[new Date(startFrom.getFullYear(), startFrom.getMonth(), startFrom.getDate()),
                               new Date(finishTo.getFullYear(), finishTo.getMonth(), finishTo.getDate())]}
-                      inline disabled={true} selectionMode="range" />
+                      inline disabled={true} selectionMode="range" locale="en-sw"/>
         );
     }
 

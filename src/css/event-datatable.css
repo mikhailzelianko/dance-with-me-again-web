@@ -45,6 +45,10 @@
     background: #777777;
 }
 
+#dance-event-list .teachers {
+    margin-right: 15px;
+}
+
 #dance-event-list .camp-icon {
     margin-right: 5px;
     vertical-align: middle;
@@ -56,7 +60,7 @@
 }
 
 #dance-event-list .live-music {
-    margin-left: 15px;
+    margin-right: 15px;
 }
 
 #dance-event-list .live-music .p-chip {
