@@ -3,3 +3,44 @@
     background: #5c9dd9;
 }
 
+.details-dialog .grid {
+    margin-top:0px;
+}
+
+.profile-card {
+  /*border: 1px solid #eeeeee !important;*/
+  background: #efefef;
+  border-radius: 5px !important;
+  padding: 8px;
+  font-size: 12px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: 116px;
+}
+
+.profile-card .profile-name {
+  padding-top: 10px;
+}
+
+.profile-card .profile-name span {
+  text-align: center;
+}
+
+.details-dialog .duration-str {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.details-dialog .map {
+  margin-top: 10px;
+}
+
+.details-dialog .p-datepicker {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+
+.details-dialog .leaflet-container {
+  border-radius: 5px;
+}
+

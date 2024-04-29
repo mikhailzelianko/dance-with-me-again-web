@@ -42,7 +42,7 @@ import './css/event-details.css';
 
 import { AccessAlarm, MenuBookRounded, BadgeRounded, DesktopWindowsRounded,
     StyleRounded, LocationOnRounded, CalendarMonthRounded,
-    MicNoneRoundedIcon, Apartment, Bungalow,
+    MicNoneRounded, Apartment, Bungalow,
     WorkspacePremium, EmojiEvents, Sailing} from '@mui/icons-material';
 
 import 'primereact/resources/themes/fluent-light/theme.css';
@@ -63,6 +63,8 @@ function App() {
         finishTo: "2023-01-01",
         genres: [],
         teachers: [],
+        orgs: [],
+        bands: [],
         locationCountryName: "",
         locationCountry: "",
         locationCity: "",
@@ -113,12 +115,12 @@ function App() {
     });
 
     let cruiseIcon = L.icon({
-            iconUrl: iconCruise,
-            //shadowUrl: iconShadow,
-            iconSize : [28,42], // size of the icon
-            iconAnchor : [14,42], // point of the icon which will correspond to marker's location
-            popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
-        });
+        iconUrl: iconCruise,
+        //shadowUrl: iconShadow,
+        iconSize : [28,42], // size of the icon
+        iconAnchor : [14,42], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
 
 
     L.Marker.prototype.options.icon = defaultIcon;
@@ -850,19 +852,8 @@ function App() {
             <Dialog header={renderHeader()} visible={displayDialog} style={{ width: '1000px' }} onHide={() => onHide()}>
                 <div className="card-container blue-container flex align-items-start justify-content-start details-dialog">
                     <div className="flex flex-column">
+
                         <div className="grid">
-                            <div className="col-fixed" style={{width: '40px'}}>
-                                <CalendarMonthRounded />
-                            </div>
-                            <div className="col">
-                                <span className="duration-str">{danceEvent.duration.durationStr}</span>
-                                <span>{danceEvent.duration.durationCountStr}</span>
-                            </div>
-                        </div>
-                        <div className="grid">
-                            <div className="col-fixed" style={{width: '40px'}}>
-                                <StyleRounded />
-                            </div>
                             <div className="col">
                                 <div className="flex align-items-center flex-wrap">
                                     {danceEvent.genres.map(d => (<Chip label={d.title} className={`mr-2 mb-2 ${d.code}`} title={d.title} key={d.code} />))}
@@ -870,27 +861,12 @@ function App() {
                             </div>
                         </div>
                         <div className="grid">
-                            <div className="col-fixed" style={{width: '40px'}}>
-                                <LocationOnRounded />
-                            </div>
-                            <div className="col">
-                                <div className="flex align-items-center flex-wrap">
-                                    <span><img alt={danceEvent.locationCountryName} src={`icons/flags/${danceEvent.locationCountry}.svg`} height={"16px"} className="flag-icon"/></span>
-                                    <span>{danceEvent.locationCountryName}, </span>
-                                    <span>{danceEvent.locationCity}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid">
-                            <div className="col-fixed" style={{width: '40px'}}>
-                                <DesktopWindowsRounded />
-                            </div>
                             <div className="col"><a target="_blank" href={danceEvent.website} rel="noopener">{danceEvent.website}</a></div>
                         </div>
                         <div className="grid">
-                            <div className="col-fixed" style={{width: '40px'}}>
-                                <BadgeRounded />
-                            </div>
+                            <div className="col">{danceEvent.description}</div>
+                        </div>
+                        <div className="grid">
                             <div className="col">
                                 <div className="flex flex-row flex-wrap card-container">
                                     {danceEvent.teachers.map(d => (
@@ -912,14 +888,41 @@ function App() {
                             </div>
                         </div>
                         <div className="grid">
-                            <div className="col-fixed" style={{width: '40px'}}>
-                                <MenuBookRounded />
+                            <div className="col">
+                                {danceEvent.bands.map(d => (<span>{d.title}<br/></span>
+                                                                                 ))}
                             </div>
-                            <div className="col">{danceEvent.description}</div>
                         </div>
+                        <div className="grid">
+                            <div className="col">
+                                {danceEvent.orgs.map(d => (<span>{d.title}<br/></span>
+                                                                                 ))}
+                            </div>
+                        </div>
+
                     </div>
                     <div className="flex flex-column" style={{width: '300px'}}>
+                        <div className="grid">
+                            <div className="col-fixed" style={{width: '40px'}}>
+                                <CalendarMonthRounded />
+                            </div>
+                            <div className="col">
+                                <span className="duration-str">{danceEvent.duration.durationStr}</span>
+                            </div>
+                        </div>
                         {renderCalendar()}
+                        <div className="grid">
+                            <div className="col-fixed" style={{width: '40px'}}>
+                                <LocationOnRounded />
+                            </div>
+                            <div className="col">
+                                <div className="flex align-items-center flex-wrap">
+                                    <span><img alt={danceEvent.locationCountryName} src={`icons/flags/${danceEvent.locationCountry}.svg`} height={"16px"} className="flag-icon"/></span>
+                                    <span>{danceEvent.locationCountryName}, </span>
+                                    <span>{danceEvent.locationCity}</span>
+                                </div>
+                            </div>
+                        </div>
                         <div className="map" style={{width: '300px', height: '300px'}}>
                             <MapContainer center={[danceEvent.locationLat, danceEvent.locationLong]} zoom={7}
                                           scrollWheelZoom={false} style={{width: '300px', height: '300px'}}>

@@ -261,46 +261,6 @@ nav {
   margin-left: 4px;
 }
 
-.profile-card {
-  border: 1px solid #eeeeee !important;
-  border-radius: 5px !important;
-  padding: 12px;
-  font-size: 12px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  width: 120px;
-}
-
-.profile-card .profile-name {
-  padding-top: 10px;
-}
-
-.profile-card .profile-name span {
-  text-align: center;
-}
-
-.details-dialog .grid {
-  margin-bottom: 10px;
-}
-
-.details-dialog .duration-str {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.details-dialog .map {
-  margin-top: 10px;
-}
-
-.details-dialog .p-datepicker {
-  border: 1px solid #cccccc;
-  border-radius: 5px;
-}
-
-.details-dialog .leaflet-container {
-  border-radius: 5px;
-}
-
 .SB span {
   color: #07135c;
 }
