@@ -217,7 +217,7 @@ nav {
 }
 
 .event-table-list .p-chip {
-  font-size: 10px;
+  font-size: 8px;
   margin-bottom: 0px;
   margin-right: 3px !important;
   padding: 0px 5px;
@@ -239,11 +239,6 @@ nav {
   height: 18px;
 }
 
-.details-dialog .p-chip {
-  font-size: 12px;
-  font-weight: bold;
-}
-
 .duration-icon {
   width: 5px;
   margin-right: 4px;
@@ -261,11 +256,16 @@ nav {
   margin-left: 4px;
 }
 
+.p-chip {
+  background: none;
+  border: 1px solid #ffffff;
+}
+
 .SB span {
-  color: #07135c;
+  color: #1c76c8;
 }
 .BL span {
-  color: #5c9dd9;
+  color: #1c76c8;
 }
 .BA span {
   color: #dfc700;
@@ -273,13 +273,22 @@ nav {
 .LH span {
   color: #cb5600;
 }
-.SJ span {
+.JZ span {
+  color: #cb5600;
+}
+.BW span {
   color: #d40000;
 }
 .SH span {
   color: #9c00e4;
 }
 .CH span {
+  color: #cb5600;
+}
+.AF span {
+  color: #dfc700;
+}
+.FS span {
   color: #9c00e4;
 }
 

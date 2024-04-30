@@ -44,3 +44,39 @@
   border-radius: 5px;
 }
 
+.details-dialog .p-chip {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.details-dialog div.SB {
+  border-color: #1c76c8;
+}
+.details-dialog div.BL {
+  border-color: #1c76c8;
+}
+.details-dialog div.BA {
+  border-color: #dfc700;
+}
+.details-dialog div.LH {
+  border-color: #cb5600;
+}
+.details-dialog div.JZ {
+  border-color: #cb5600;
+}
+.details-dialog div.BW {
+  border-color: #d40000;
+}
+.details-dialog div.SH {
+  border-color: #9c00e4;
+}
+.details-dialog div.CH {
+  border-color: #cb5600;
+}
+.details-dialog div.AF {
+  border-color: #dfc700;
+}
+.details-dialog div.FS {
+  border-color: #9c00e4;
+}
+

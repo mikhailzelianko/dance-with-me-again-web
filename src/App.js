@@ -893,13 +893,6 @@ function App() {
                                                                                  ))}
                             </div>
                         </div>
-                        <div className="grid">
-                            <div className="col">
-                                {danceEvent.orgs.map(d => (<span>{d.title}<br/></span>
-                                                                                 ))}
-                            </div>
-                        </div>
-
                     </div>
                     <div className="flex flex-column" style={{width: '300px'}}>
                         <div className="grid">
@@ -935,6 +928,10 @@ function App() {
                                     </Popup>
                                 </Marker>
                             </MapContainer>
+                        </div>
+                        <div>
+                                {danceEvent.orgs.map(d => (<span>{d.title}<br/></span>
+                                                                                 ))}
                         </div>
                     </div>
                 </div>
