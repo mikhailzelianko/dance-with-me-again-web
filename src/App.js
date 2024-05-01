@@ -319,7 +319,7 @@ function App() {
 
         var teachers = "";
         if (data.exchange) {
-            teachers = (<Chip label="Exchange" />)
+            teachers = (<Tag value="Exchange" />)
         } else if (data.teachers && data.teachers.length > 0) {
             teachers = (
                 <AvatarGroup className="teachers"
@@ -358,7 +358,7 @@ function App() {
         let tchSelector = ".tch-" + rand;
         var teachers = "";
         if (data.exchange) {
-            teachers = (<Chip label="Exchange" />)
+            teachers = (<Tag severity="contrast" value="Exchange" />)
         } else if (data.teachers && data.teachers.length > 0) {
             if (data.teachers.length < maxIcons) {
                 teachers = (
@@ -479,7 +479,7 @@ function App() {
                             {liveMusic}
                             {competitions}
                         </div>
-                        <div>
+                        <div className="location">
                             <span>{data.locationCity}&nbsp;</span>
                             <span><img alt={data.locationCountryName}
                                     src={`icons/flags/${data.locationCountry}.svg`}
@@ -562,7 +562,7 @@ function App() {
 
         return (
             <React.Fragment>
-                <div className="duration">
+                <div className="duration-weeks">
                     {durationWeeks}
                 </div>
                 <div className="duration-count">
@@ -595,7 +595,7 @@ function App() {
 
             return (
                 <React.Fragment>
-                    <div className="duration">
+                    <div className="duration-week">
                         {durationWeeks}
                     </div>
                 </React.Fragment>
@@ -904,7 +904,7 @@ function App() {
                             </div>
                         </div>
                         {renderCalendar()}
-                        <div className="grid">
+                        <div className="grid map-header">
                             <div className="col-fixed" style={{width: '40px'}}>
                                 <LocationOnRounded />
                             </div>

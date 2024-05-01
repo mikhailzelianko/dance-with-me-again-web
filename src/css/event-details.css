@@ -32,7 +32,7 @@
 }
 
 .details-dialog .map {
-  margin-top: 10px;
+
 }
 
 .details-dialog .p-datepicker {
@@ -47,6 +47,12 @@
 .details-dialog .p-chip {
   font-size: 12px;
   font-weight: bold;
+  background: none;
+  border: 1px solid #000000;
+}
+
+.details-dialog .map-header {
+    margin-top: 25px;
 }
 
 .details-dialog div.SB {

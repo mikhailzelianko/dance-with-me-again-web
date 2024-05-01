@@ -217,10 +217,10 @@ nav {
 }
 
 .event-table-list .p-chip {
-  font-size: 8px;
+  font-size: 9px;
   margin-bottom: 0px;
   margin-right: 3px !important;
-  padding: 0px 5px;
+  padding: 0px 3px;
   font-weight: bold;
 }
 
@@ -256,9 +256,9 @@ nav {
   margin-left: 4px;
 }
 
-.p-chip {
+.event-table-list .p-chip {
   background: none;
-  border: 1px solid #000000;
+  border: none;
 }
 
 .SB span {
