@@ -55,6 +55,40 @@
     margin-top: 25px;
 }
 
+.details-dialog .card-container .p-chip {
+    margin-right: 20px;
+    margin-bottom: 20px;
+    border-radius: 18px;
+    border: none;
+    background: #eeeeee;
+}
+
+.details-dialog .card-container .p-chip img {
+    width: 42px;
+    height: 42px;
+    margin: -4px;
+    margin-left: -9px;
+    margin-right: 8px;
+    border: 1px solid #000000;
+    /*margin-left: -0.5rem;
+    margin-right: 0.5rem;*/
+}
+
+.details-dialog .bands-block {
+    margin-top: 20px;
+}
+
+.details-dialog .bands-block .p-chip {
+    font-size: 13px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    border-color: #cccccc;
+}
+
+.details-dialog .teachers-block {
+    margin-top: 30px;
+}
+
 .details-dialog div.SB {
   border-color: #1c76c8;
 }

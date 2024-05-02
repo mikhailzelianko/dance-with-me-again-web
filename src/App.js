@@ -822,6 +822,31 @@ function App() {
         return defaultIcon;
     }
 
+    const renderTeachersBlock = () => {
+        return (
+            <div className="teachers-block">
+                <div className="flex flex-row flex-wrap card-container">
+                    {danceEvent.teachers.map(d => (
+                        <Chip label={d.displayName} image={d.profilePictureSrc} />
+                    ))}
+                    <span>{danceEvent.teacherStr}</span>
+                </div>
+            </div>
+        )
+    }
+
+    const renderBandsBlock = () => {
+        return (
+            <div className="bands-block">
+                {danceEvent.bands.map(d => (
+                <React.Fragment>
+                    <Chip label={d.title} icon="pi pi-microphone" />
+                </React.Fragment>
+                                                                 ))}
+            </div>
+        )
+    }
+
     return (
         <div className="App">
             <Helmet>
@@ -851,7 +876,7 @@ function App() {
 
             <Dialog header={renderHeader()} visible={displayDialog} style={{ width: '1000px' }} onHide={() => onHide()}>
                 <div className="card-container blue-container flex align-items-start justify-content-start details-dialog">
-                    <div className="flex flex-column">
+                    <div className="flex flex-column genres-container">
 
                         <div className="grid">
                             <div className="col">
@@ -868,29 +893,12 @@ function App() {
                         </div>
                         <div className="grid">
                             <div className="col">
-                                <div className="flex flex-row flex-wrap card-container">
-                                    {danceEvent.teachers.map(d => (
-                                        <div className="flex flex-column align-items-center justify-content-center profile-card" key={d.displayName}>
-                                            <div className="flex">
-                                                <Avatar image={d.profilePictureSrc} style={{width: '60px', height: '60px'}}
-                                                                             title={d.displayName}
-                                                                             imageAlt={d.displayName}
-                                                                             label={d.displayName.match(/\b(\w)/g).join('')}
-                                                                             shape="circle"/>
-                                            </div>
-                                            <div className="flex profile-name">
-                                                <span>{d.displayName}</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    <span>{danceEvent.teacherStr}</span>
-                                </div>
+                                {renderTeachersBlock()}
                             </div>
                         </div>
                         <div className="grid">
                             <div className="col">
-                                {danceEvent.bands.map(d => (<span>{d.title}<br/></span>
-                                                                                 ))}
+                                {renderBandsBlock()}
                             </div>
                         </div>
                     </div>
