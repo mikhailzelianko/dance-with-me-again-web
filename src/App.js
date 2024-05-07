@@ -34,6 +34,11 @@ import iconParty from './image/map/marker-icon-party.png';
 import exchangeMapIcon from './image/map/exchange-marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
+import markerIcon from './image/map/marker-round.png';
+import markerExchangeIcon from './image/map/marker-exchange-round.png';
+import markerCampIcon from './image/map/marker-camp-round.png';
+import markerCruiseIcon from './image/map/marker-cruise-round.png';
+
 import './css/App.css';
 import './css/map.css';
 import './css/event-datatable.css';
@@ -119,6 +124,38 @@ function App() {
         //shadowUrl: iconShadow,
         iconSize : [28,42], // size of the icon
         iconAnchor : [14,42], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let mapMarkerIcon = L.icon({
+        iconUrl: markerIcon,
+        //shadowUrl: iconShadow,
+        iconSize : [30,30], // size of the icon
+        iconAnchor : [15,15], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let mapMarkerExchangeIcon = L.icon({
+        iconUrl: markerExchangeIcon,
+        //shadowUrl: iconShadow,
+        iconSize : [30,30], // size of the icon
+        iconAnchor : [15,15], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let mapMarkerCampIcon = L.icon({
+        iconUrl: markerCampIcon,
+        //shadowUrl: iconShadow,
+        iconSize : [30,30], // size of the icon
+        iconAnchor : [15,15], // point of the icon which will correspond to marker's location
+        popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let mapMarkerCruiseIcon = L.icon({
+        iconUrl: markerCruiseIcon,
+        //shadowUrl: iconShadow,
+        iconSize : [30,30], // size of the icon
+        iconAnchor : [15,15], // point of the icon which will correspond to marker's location
         popupAnchor : [0, 0] // point from which the popup should open relative to the iconAnchor
     });
 
@@ -319,7 +356,7 @@ function App() {
 
         var teachers = "";
         if (data.exchange) {
-            teachers = (<Tag value="Exchange" />)
+            teachers = (<span className="teachers"><Tag value="Exchange" /></span>)
         } else if (data.teachers && data.teachers.length > 0) {
             teachers = (
                 <AvatarGroup className="teachers"
@@ -358,7 +395,7 @@ function App() {
         let tchSelector = ".tch-" + rand;
         var teachers = "";
         if (data.exchange) {
-            teachers = (<Tag severity="contrast" value="Exchange" />)
+            teachers = (<Tag severity="contrast" value="Exchange" className="teachers" />)
         } else if (data.teachers && data.teachers.length > 0) {
             if (data.teachers.length < maxIcons) {
                 teachers = (
@@ -809,22 +846,27 @@ function App() {
 
     const getMapIcon = (data) => {
         if (data.camp) {
-            return campIcon;
+            return mapMarkerCampIcon;
         }
 
         if (data.cruise) {
-            return cruiseIcon;
+            return mapMarkerCruiseIcon;
         }
 
         if (data.exchange) {
-            return exchangeIcon;
+            return mapMarkerExchangeIcon;
         }
-        return defaultIcon;
+        return mapMarkerIcon;
     }
 
     const renderTeachersBlock = () => {
+        var header = ""
+        if (danceEvent.teachers && danceEvent.teachers.length > 0) {
+            header = (<div className="header">Instructors</div>)
+        }
         return (
             <div className="teachers-block">
+                {header}
                 <div className="flex flex-row flex-wrap card-container">
                     {danceEvent.teachers.map(d => (
                         <Chip label={d.displayName} image={d.profilePictureSrc} />
@@ -836,8 +878,13 @@ function App() {
     }
 
     const renderBandsBlock = () => {
+        var header = ""
+        if (danceEvent.bands && danceEvent.bands.length > 0) {
+            header = (<div className="header">Live music</div>)
+        }
         return (
             <div className="bands-block">
+                {header}
                 {danceEvent.bands.map(d => (
                 <React.Fragment>
                     <Chip label={d.title} icon="pi pi-microphone" />
@@ -886,10 +933,10 @@ function App() {
                             </div>
                         </div>
                         <div className="grid">
-                            <div className="col"><a target="_blank" href={danceEvent.website} rel="noopener">{danceEvent.website}</a></div>
+                            <div className="col link"><DesktopWindowsRounded/><a target="_blank" href={danceEvent.website} rel="noopener">{danceEvent.website}</a></div>
                         </div>
                         <div className="grid">
-                            <div className="col">{danceEvent.description}</div>
+                            <div className="col description" dangerouslySetInnerHTML={{__html: danceEvent.description.replace(/(?:\r\n|\r|\n)/g, '<br />')}} />
                         </div>
                         <div className="grid">
                             <div className="col">
