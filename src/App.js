@@ -19,11 +19,13 @@ import { faCircle } from '@fortawesome/fontawesome-free-solid';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
+import { Panel } from 'primereact/panel';
 import { locale, addLocale, updateLocaleOption, updateLocaleOptions, localeOption, localeOptions } from 'primereact/api';
+import { Checkbox } from "primereact/checkbox";
 
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, Marker, Popup, TileLayer, Tooltip as LeafletTooltip} from 'react-leaflet'
-import { useMap } from 'react-leaflet/hooks'
+import { useMap } from 'react-leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 //import icon from 'leaflet/dist/images/marker-icon.png';
@@ -59,6 +61,8 @@ import 'leaflet/dist/leaflet.css';
 
 function App() {
     const toast = useRef(null);
+
+
     const [danceEvents, setDanceEvents] = useState([]);
     const [danceEvent, setDanceEvent] = useState({
         title: "",
@@ -89,11 +93,20 @@ function App() {
     const [filterName, setFilterName] = useState("");
     const [filterStartFrom, setFilterStartFrom] = useState(new Date());
     const [filterFinishTo, setFilterFinishTo] = useState("");
-    const [filterGenres, setFilterGenres] = useState([{code: "BL"}]);
+    /*const [filterGenres, setFilterGenres] = useState([{code: "BL", title: "Blues"},
+                                                        {code: "SB", title: "Slow Bal"}]);*/
     const [filterCountries, setFilterCountries] = useState("");
     const [filterTypes, setFilterTypes] = useState("");
     const [loading, setLoading] = useState(false);
     const [reset, setReset] = useState(false);
+
+
+    const filterGenreOptions = [
+        { name: 'Blues', key: "BL" },
+        { name: 'Slow Bal', key: "SB" },
+        { name: 'Shag', key: "SH" }
+    ];
+    const [filterGenres, setFilterGenres] = useState(filterGenreOptions);
 
     let defaultIcon = L.icon({
         iconUrl: icon,
@@ -205,8 +218,12 @@ function App() {
             params['finishTo'] = filterFinishTo.toISOString().substring(0, 10);
         }
 
-        if (typeof filterGenres !== 'undefined' && filterGenres.length > 0) {
-            params['genres'] = filterGenres.map(a => a.code);
+        if (typeof filterGenres !== 'undefined' ) {
+            if (filterGenres.length > 0) {
+                params['genres'] = filterGenres.map(a => a.key);
+            } else {
+                params['genres'] = ["DL"];
+            }
         }
 
         if (typeof filterCountries !== 'undefined' && filterCountries.length > 0) {
@@ -239,6 +256,8 @@ function App() {
             "startFrom": currentDate.toISOString().substring(0, 10)
         }
 
+        params['genres'] = filterGenreOptions.map(a => a.key);
+
         fetch(`http://ec2-16-16-96-223.eu-north-1.compute.amazonaws.com:8080/api/danceEvents/?` + new URLSearchParams(params))
             .then(res => res.json())
             .then(data => setDanceEvents(data),
@@ -263,7 +282,7 @@ function App() {
         setFilterFinishTo("");
         setFilterTypes("");
         setFilterCountries("");
-        setFilterGenres("");
+        setFilterGenres(filterGenreOptions);
     }
 
     const resetFilter = () => {
@@ -328,7 +347,7 @@ function App() {
     const countrySelectTemplate = (option) => {
         return (
             <div className="flex align-items-center">
-                <img alt={option.title} src={`icons/flags/${option.code}.svg`} className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
+                <img alt={option.title} src={`icons/flags/${option.code.toLowerCase()}.svg`} className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
                 <div>{option.title}</div>
             </div>
         );
@@ -710,13 +729,50 @@ function App() {
         )
     }
 
+    const onGenreChange = (e) => {
+        let _filterGenres = [...filterGenres];
+
+        if (e.checked)
+            _filterGenres.push(e.value);
+        else
+            _filterGenres = _filterGenres.filter(category => category.key !== e.value.key);
+
+        setFilterGenres(_filterGenres);
+    };
+
     const renderShortFilter = () => {
             return (
-            <React.Fragment>
-                <div className="filter-short-holder">
-                    <span>qwertyuil</span>
-                </div>
-            </React.Fragment>
+                <React.Fragment>
+                    <div className="filter-row">
+                        <Calendar value={filterStartFrom} onChange={handleFilterStartFromChange} minDate={filterStartFrom}
+                                    showIcon readOnlyInput />
+                        <span className="arrow-icon pi pi-arrow-right"></span>
+                        <Calendar value={filterFinishTo} onChange={handleFilterFinishToChange} showIcon readOnlyInput />
+                        <span className="arrow-icon pi"></span>
+
+                        <Button label="Search" icon="pi pi-play" loading={loading}
+                                     onClick={applyFilter} className="filter-button"/>
+                        <Button icon="pi pi-times" loading={loading} onClick={resetFilter}
+                                     aria-label="Filter" className="reset-button"/>
+                    </div>
+                    <div className="filter-row">
+                        <span className="p-input-icon-left">
+                            {filterGenreOptions.map((genre) => {
+                                return (
+                                    <span key={genre.key} className={genre.key}>
+                                        <Checkbox inputId={genre.key} name="category" value={genre} onChange={onGenreChange} checked={filterGenres.some((item) => item.key === genre.key)} />
+                                        <label htmlFor={genre.key}>
+                                            {genre.name}
+                                        </label>
+                                    </span>
+                                );
+                            })}
+                        </span>
+                    </div>
+                    <div className="filter-row">
+
+                    </div>
+                </React.Fragment>
             )
         }
 
@@ -776,6 +832,15 @@ function App() {
                </React.Fragment>
            );
        }
+
+    const flyToLocation = (data) => {
+        /*
+        const { current = {} } = mapRef;
+        const { leafletElement: map } = current;
+
+*/
+
+    }
 
     const renderEventMap = () => {
             return (
@@ -905,6 +970,7 @@ function App() {
                 <meta property="og:type" content={type} />*/ }
                 <meta property="og:title" content='Swing with me' />
                 <meta property="og:description" content='Swing with me - calendar for Lindy hop, Balboa, Blues, Shag, Charlston festivals' />
+                <meta property="og:image" content="http://swingwithme.today/images/swm.png" />
                 { /* End Facebook tags */ }
                 { /* Twitter tags }
                 <meta name="twitter:creator" content={name} />}
@@ -994,8 +1060,10 @@ function App() {
 
             <content>
                 {renderEventMap()}
-
                 <div id="content-holder">
+                    <div id="filter-short-holder">
+                        {renderShortFilter()}
+                    </div>
                     <div id="dance-event-list">
                         {renderEventShortList()}
                     </div>

@@ -109,6 +109,28 @@
     padding-right: 20px;
 }
 
+.details-dialog .p-datepicker table td > span {
+    width: auto;
+    border-radius: 0px;
+}
+
+.details-dialog .p-datepicker table td {
+    padding: 1px 0px;
+}
+
+.details-dialog .p-datepicker table td.p-datepicker-today > span {
+    width: 32px;
+    border-radius: 50%;
+    border: 1px solid #000000;
+    background: none;
+    color: #555555;
+}
+
+.details-dialog .p-datepicker-prev,
+.details-dialog .p-datepicker-next {
+    display: none;
+}
+
 .details-dialog div.SB {
   border-color: #1c76c8;
 }
