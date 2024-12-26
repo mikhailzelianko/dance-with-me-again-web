@@ -59,7 +59,7 @@ import 'primeflex/primeflex.css';
 import 'leaflet/dist/leaflet.css';
 
 
-function App() {
+function MapView() {
     const toast = useRef(null);
 
 
@@ -981,12 +981,6 @@ function App() {
             </Helmet>
             <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
             <Toast ref={toast} />
-            <header>
-                <nav>
-                  <img src="images/swm.png" className="logo" alt="Swing with me" height="44"/>
-                </nav>
-            </header>
-
             <Dialog header={renderHeader()} visible={displayDialog} style={{ width: '1000px' }} onHide={() => onHide()}>
                 <div className="card-container blue-container flex align-items-start justify-content-start details-dialog">
                     <div className="flex flex-column genres-container">
@@ -1074,4 +1068,4 @@ function App() {
     );
 }
 
-export default App;
+export default MapView;
